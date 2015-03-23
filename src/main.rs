@@ -40,25 +40,6 @@ fn main() {
     // just for now.
     let filename = args.arg_file.unwrap();
 
-    if args.flag_bytes {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-
-        let bytes = file.bytes()
-            .map(|x| x.ok().expect("There was an IO error."))
-            .count();
-
-        println!("bytes: {}", bytes);
-    }
-    if args.flag_chars {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-
-        let chars = file.chars()
-            .map(|x| x.ok().expect("There was an IO error."))
-            .count();
-
-        println!("chars: {}", chars);
-
-    }
     if args.flag_lines {
         let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
 
@@ -67,7 +48,7 @@ fn main() {
             .filter(|x| *x == b'\n')
             .count();
 
-        println!("newlines: {}", newlines);
+        print!("{}\t", newlines);
     }
     if args.flag_words {
         let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
@@ -78,8 +59,30 @@ fn main() {
             .map(|x| x.ok().expect("There was an IO error."))
             .count();
 
-        println!("words: {}", words);
+        print!("{}\t", words);
     }
+
+    if args.flag_bytes {
+        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+
+        let bytes = file.bytes()
+            .map(|x| x.ok().expect("There was an IO error."))
+            .count();
+
+        print!("{}\t", bytes);
+    }
+
+    if args.flag_chars {
+        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+
+        let chars = file.chars()
+            .map(|x| x.ok().expect("There was an IO error."))
+            .count();
+
+        print!("{}\t", chars);
+
+    }
+
     if args.flag_max_line_length {
         let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
 
@@ -90,7 +93,9 @@ fn main() {
             .map(|x| x.len())
             .max().unwrap();
 
-        println!("longest_line: {}", longest_line);
+        print!("{}\t", longest_line);
     }
+
+    println!("{}", filename);
 }
 
