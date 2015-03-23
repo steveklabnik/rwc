@@ -1,0 +1,8 @@
+[package]
+
+name = "rwc"
+version = "0.0.1"
+authors = ["Steve Klabnik <steve@steveklabnik.com>"]
+
+[dependencies]
+getopts = "0.2.4"
