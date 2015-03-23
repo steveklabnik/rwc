@@ -1,8 +1,12 @@
 [package]
 
 name = "rwc"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Steve Klabnik <steve@steveklabnik.com>"]
+description = "A wc clone."
+license = "AGPL-3.0"
+homepage = "https://github.com/steveklabnik/rwc"
+repository = "https://github.com/steveklabnik/rwc"
 
 [dependencies]
 getopts = "0.2.4"
