@@ -39,63 +39,37 @@ fn main() {
 
     // just for now.
     let filename = args.arg_file.unwrap();
+    let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+    let reader = BufReader::new(file);
 
-    if args.flag_lines {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+    let mut bytes = 0;
+    let mut chars = 0;
+    let mut lines = 0;
+    let mut words = 0;
+    let mut max_line_length = 0;
 
-        let newlines = file.bytes()
-            .map(|x| x.ok().expect("There was an IO error."))
-            .filter(|x| *x == b'\n')
-            .count();
+     for line in reader.lines() {
+         let line = line.ok().expect("There was an IO error.");
 
-        print!("{}\t", newlines);
-    }
-    if args.flag_words {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+         lines += 1;
+         bytes += line.len();
+         bytes += 1; // don't forget the \n!
+         words += line.words().count();
 
-        let reader = BufReader::new(file);
+         let length = line.chars().count();
+         chars += length;
+         chars += 1; // don't forget the \n!
 
-        let words = reader.split(b' ')
-            .map(|x| x.ok().expect("There was an IO error."))
-            .count();
+         if length > max_line_length {
+             max_line_length = length;
+         }
+     }
 
-        print!("{}\t", words);
-    }
 
-    if args.flag_bytes {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-
-        let bytes = file.bytes()
-            .map(|x| x.ok().expect("There was an IO error."))
-            .count();
-
-        print!("{}\t", bytes);
-    }
-
-    if args.flag_chars {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-
-        let chars = file.chars()
-            .map(|x| x.ok().expect("There was an IO error."))
-            .count();
-
-        print!("{}\t", chars);
-
-    }
-
-    if args.flag_max_line_length {
-        let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-
-        let reader = BufReader::new(file);
-
-        let longest_line = reader.lines()
-            .map(|x| x.ok().expect("There was an IO error."))
-            .map(|x| x.len())
-            .max().unwrap();
-
-        print!("{}\t", longest_line);
-    }
-
-    println!("{}", filename);
+    println!("{}", bytes);
+    println!("{}", chars);
+    println!("{}", lines);
+    println!("{}", words);
+    println!("{}", max_line_length);
 }
 
