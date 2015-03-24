@@ -1,4 +1,4 @@
-#![feature(io)]
+#![feature(str_words)]
 
 use std::io::prelude::*;
 use std::fs::File;
@@ -65,11 +65,6 @@ fn main() {
          }
      }
 
-
-    println!("{}", bytes);
-    println!("{}", chars);
-    println!("{}", lines);
-    println!("{}", words);
-    println!("{}", max_line_length);
+    println!("{} {} {} {}\n", lines, words, bytes, filename);
 }
 
