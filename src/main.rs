@@ -65,10 +65,26 @@ fn main() {
         }
     }
 
-    if args.flag_chars {
-        println!("{} {} {} {}\n", lines, words, chars, filename);
-    } else {
-        println!("{} {} {} {}\n", lines, words, bytes, filename);
+    if args.flag_lines {
+        print!("{}", lines);
     }
+
+    if args.flag_words {
+        print!("{}", words)
+    }
+
+    if args.flag_bytes {
+        print!("{}", bytes)
+    }
+
+    if args.flag_chars {
+        print!("{}", chars)
+    }
+
+    if args.flag_max_line_length {
+        print!("{}", max_line_length)
+    }
+
+    println!(" {}", filename);
 }
 
