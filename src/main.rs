@@ -65,6 +65,10 @@ fn main() {
         }
     }
 
-    println!("{} {} {} {}\n", lines, words, bytes, filename);
+    if args.flag_chars {
+        println!("{} {} {} {}\n", lines, words, chars, filename);
+    } else {
+        println!("{} {} {} {}\n", lines, words, bytes, filename);
+    }
 }
 
