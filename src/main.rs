@@ -48,22 +48,22 @@ fn main() {
     let mut words = 0;
     let mut max_line_length = 0;
 
-     for line in reader.lines() {
-         let line = line.ok().expect("There was an IO error.");
+    for line in reader.lines() {
+        let line = line.ok().expect("There was an IO error.");
 
-         lines += 1;
-         bytes += line.len();
-         bytes += 1; // don't forget the \n!
-         words += line.words().count();
+        lines += 1;
+        bytes += line.len();
+        bytes += 1; // don't forget the \n!
+        words += line.words().count();
 
-         let length = line.chars().count();
-         chars += length;
-         chars += 1; // don't forget the \n!
+        let length = line.chars().count();
+        chars += length;
+        chars += 1; // don't forget the \n!
 
-         if length > max_line_length {
-             max_line_length = length;
-         }
-     }
+        if length > max_line_length {
+            max_line_length = length;
+        }
+    }
 
     println!("{} {} {} {}\n", lines, words, bytes, filename);
 }
