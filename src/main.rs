@@ -4,7 +4,7 @@ use std::io::prelude::*;
 use std::fs::File;
 use std::io::BufReader;
 
-extern crate "rustc-serialize" as rustc_serialize;
+extern crate rustc_serialize;
 extern crate docopt;
 
 use docopt::Docopt;
