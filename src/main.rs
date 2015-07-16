@@ -4,7 +4,7 @@ use getopts::Options;
 use std::env;
 use std::io::prelude::*;
 use std::fs::File;
-use std::io::BufReader;
+use std::io::{BufReader, stdin};
 
 struct CountResults {
     bytes: u64,
@@ -73,12 +73,16 @@ fn main() {
         return;
     }
 
-    // just for now.
-    let filename = matches.free[0].clone();
-    let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-    let reader = BufReader::new(file);
-
-    let counts = do_count(reader);
+    let (counts, filename) = match matches.free.len() {
+        0 => (do_count(BufReader::new(stdin())), "<stdin>".to_string()),
+        1 => {
+            // just for now.
+            let filename = matches.free[0].clone();
+            let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+            (do_count(BufReader::new(file)), filename)
+        },
+        _ => panic!("A single filename was expected"),
+    };
 
     if matches.opt_present("lines") {
         print!("{} ", counts.lines);
