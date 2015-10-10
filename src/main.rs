@@ -7,7 +7,6 @@ extern crate docopt;
 extern crate regex;
 
 use docopt::Docopt;
-
 use regex::Regex;
 
 static USAGE: &'static str = "
@@ -57,8 +56,8 @@ fn main() {
         bytes += line.len();
         bytes += 1; // don't forget the \n!
 
-        let words_in_line: Vec<&str>  = word_counter.split(&line).collect();
-        words += words_in_line.len();
+        let words_in_line  = word_counter.split(&line).count();
+        words += words_in_line;
 
         let length = line.chars().count();
         chars += length;
