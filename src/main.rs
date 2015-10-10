@@ -1,13 +1,14 @@
-#![feature(str_words)]
-
 use std::io::prelude::*;
 use std::fs::File;
 use std::io::BufReader;
 
 extern crate rustc_serialize;
 extern crate docopt;
+extern crate regex;
 
 use docopt::Docopt;
+
+use regex::Regex;
 
 static USAGE: &'static str = "
 Usage: rwc [options] [<file>]
@@ -45,6 +46,7 @@ fn main() {
     let mut bytes = 0;
     let mut chars = 0;
     let mut lines = 0;
+    let word_counter = Regex::new(r"\b\W+").unwrap();
     let mut words = 0;
     let mut max_line_length = 0;
 
@@ -54,7 +56,9 @@ fn main() {
         lines += 1;
         bytes += line.len();
         bytes += 1; // don't forget the \n!
-        words += line.words().count();
+
+        let words_in_line: Vec<&str>  = word_counter.split(&line).collect();
+        words += words_in_line.len();
 
         let length = line.chars().count();
         chars += length;
