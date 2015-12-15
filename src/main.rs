@@ -16,13 +16,19 @@ fn main() {
     opts.optflag("w", "words", "print the word counts");
     opts.optflag("c", "bytes", "print the byte counts");
     opts.optflag("m", "chars", "print the character counts");
-    opts.optflag("L", "max-line-length", "print the length of the longest line");
+    opts.optflag("L",
+                 "max-line-length",
+                 "print the length of the longest line");
     opts.optflag("h", "help", "display this help and exit");
     opts.optflag("v", "version", "output version information and exit");
 
     let matches = match opts.parse(&args[1..]) {
-        Ok(m) => { m }
-        Err(f) => { panic!(f.to_string()) }
+        Ok(m) => {
+            m
+        }
+        Err(f) => {
+            panic!(f.to_string())
+        }
     };
 
     if matches.opt_present("h") {
