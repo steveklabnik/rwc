@@ -7,6 +7,7 @@ extern crate docopt;
 
 use docopt::Docopt;
 
+#[rustfmt_skip]
 static USAGE: &'static str = "
 Usage: rwc [options] [<file>]
 
@@ -32,8 +33,8 @@ struct Args {
 
 fn main() {
     let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.decode())
-        .unwrap_or_else(|e| e.exit());
+                         .and_then(|d| d.decode())
+                         .unwrap_or_else(|e| e.exit());
 
     // just for now.
     let filename = args.arg_file.unwrap();
@@ -86,4 +87,3 @@ fn main() {
 
     println!(" {}", filename);
 }
-
