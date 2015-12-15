@@ -10,12 +10,6 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
 
-    let mut print_lines = false;
-    let mut print_words = false;
-    let mut print_bytes = false;
-    let mut print_chars = false;
-    let mut print_max_line_length = false;
-
     let mut opts = Options::new();
 
     opts.optflag("l", "lines", "print the newline counts");
@@ -30,26 +24,6 @@ fn main() {
         Ok(m) => { m }
         Err(f) => { panic!(f.to_string()) }
     };
-
-    if matches.opt_present("l") {
-        print_lines = true;
-    }
-
-    if matches.opt_present("w") {
-        print_words = true;
-    }
-
-    if matches.opt_present("c") {
-        print_bytes = true;
-    }
-
-    if matches.opt_present("m") {
-        print_chars = true;
-    }
-
-    if matches.opt_present("L") {
-        print_max_line_length = true;
-    }
 
     if matches.opt_present("h") {
         print_usage(&program, opts);
@@ -89,23 +63,23 @@ fn main() {
         }
     }
 
-    if print_lines {
+    if matches.opt_present("l") {
         print!("{}", lines);
     }
 
-    if print_words {
+    if matches.opt_present("w") {
         print!("{}", words)
     }
 
-    if print_bytes {
+    if matches.opt_present("c") {
         print!("{}", bytes)
     }
 
-    if print_chars {
+    if matches.opt_present("m") {
         print!("{}", chars)
     }
 
-    if print_max_line_length {
+    if matches.opt_present("L") {
         print!("{}", max_line_length)
     }
 
