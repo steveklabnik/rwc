@@ -70,23 +70,23 @@ fn main() {
     }
 
     if matches.opt_present("l") {
-        print!("{}", lines);
+        print!("{} ", lines);
     }
 
     if matches.opt_present("w") {
-        print!("{}", words)
+        print!("{} ", words)
     }
 
     if matches.opt_present("c") {
-        print!("{}", bytes)
+        print!("{} ", bytes)
     }
 
     if matches.opt_present("m") {
-        print!("{}", chars)
+        print!("{} ", chars)
     }
 
     if matches.opt_present("L") {
-        print!("{}", max_line_length)
+        print!("{} ", max_line_length)
     }
 
     println!(" {}", filename);
