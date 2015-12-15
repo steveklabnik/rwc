@@ -11,4 +11,3 @@ repository = "https://github.com/steveklabnik/rwc"
 [dependencies]
 docopt = "*"
 rustc-serialize = "*"
-regex = "*"
