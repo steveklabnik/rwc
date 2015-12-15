@@ -9,5 +9,4 @@ homepage = "https://github.com/steveklabnik/rwc"
 repository = "https://github.com/steveklabnik/rwc"
 
 [dependencies]
-docopt = "*"
-rustc-serialize = "*"
+getopts = "0.2.14"

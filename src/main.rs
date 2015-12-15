@@ -1,43 +1,67 @@
+extern crate getopts;
+
+use getopts::Options;
+use std::env;
 use std::io::prelude::*;
 use std::fs::File;
 use std::io::BufReader;
 
-extern crate rustc_serialize;
-extern crate docopt;
-
-use docopt::Docopt;
-
-#[rustfmt_skip]
-static USAGE: &'static str = "
-Usage: rwc [options] [<file>]
-
-Options:
-    -c, --bytes            print the byte counts
-    -m, --chars            print the character counts
-    -l, --lines            print the newline counts
-    -w, --words            print the word counts
-    -L, --max-line-length  print the length of the longest line
-    -h, --help             display this help and exit
-    -v, --version          output version information and exit
-";
-
-#[derive(RustcDecodable, Debug)]
-struct Args {
-    arg_file: Option<String>,
-    flag_bytes: bool,
-    flag_chars: bool,
-    flag_lines: bool,
-    flag_words: bool,
-    flag_max_line_length: bool,
-}
-
 fn main() {
-    let args: Args = Docopt::new(USAGE)
-                         .and_then(|d| d.decode())
-                         .unwrap_or_else(|e| e.exit());
+    let args: Vec<String> = env::args().collect();
+    let program = args[0].clone();
+
+    let mut print_lines = false;
+    let mut print_words = false;
+    let mut print_bytes = false;
+    let mut print_chars = false;
+    let mut print_max_line_length = false;
+
+    let mut opts = Options::new();
+
+    opts.optflag("l", "lines", "print the newline counts");
+    opts.optflag("w", "words", "print the word counts");
+    opts.optflag("c", "bytes", "print the byte counts");
+    opts.optflag("m", "chars", "print the character counts");
+    opts.optflag("L", "max-line-length", "print the length of the longest line");
+    opts.optflag("h", "help", "display this help and exit");
+    opts.optflag("v", "version", "output version information and exit");
+
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => { m }
+        Err(f) => { panic!(f.to_string()) }
+    };
+
+    if matches.opt_present("l") {
+        print_lines = true;
+    }
+
+    if matches.opt_present("w") {
+        print_words = true;
+    }
+
+    if matches.opt_present("c") {
+        print_bytes = true;
+    }
+
+    if matches.opt_present("m") {
+        print_chars = true;
+    }
+
+    if matches.opt_present("L") {
+        print_max_line_length = true;
+    }
+
+    if matches.opt_present("h") {
+        print_usage(&program, opts);
+        return;
+    }
+
+    if matches.opt_present("v") {
+        return;
+    }
 
     // just for now.
-    let filename = args.arg_file.unwrap();
+    let filename = matches.free[0].clone();
     let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
     let reader = BufReader::new(file);
 
@@ -65,25 +89,30 @@ fn main() {
         }
     }
 
-    if args.flag_lines {
+    if print_lines {
         print!("{}", lines);
     }
 
-    if args.flag_words {
+    if print_words {
         print!("{}", words)
     }
 
-    if args.flag_bytes {
+    if print_bytes {
         print!("{}", bytes)
     }
 
-    if args.flag_chars {
+    if print_chars {
         print!("{}", chars)
     }
 
-    if args.flag_max_line_length {
+    if print_max_line_length {
         print!("{}", max_line_length)
     }
 
     println!(" {}", filename);
+}
+
+fn print_usage(program: &str, opts: Options) {
+    let brief = format!("Usage: {} rwc [options] [<file>]", program);
+    print!("{}", opts.usage(&brief));
 }
