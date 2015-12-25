@@ -4,7 +4,40 @@ use getopts::Options;
 use std::env;
 use std::io::prelude::*;
 use std::fs::File;
-use std::io::BufReader;
+use std::io::{BufReader, stdin};
+
+struct CountResults {
+    bytes: u64,
+    chars: u64,
+    lines: u64,
+    words: u64,
+    max_line_length: u64,
+}
+
+fn do_count<R: Read>(reader: BufReader<R>) -> CountResults {
+    let mut res = CountResults { bytes: 0, chars: 0, lines: 0,
+                                 words: 0, max_line_length: 0 };
+
+    for line in reader.lines() {
+        let line = line.ok().expect("There was an IO error.");
+
+        res.lines += 1;
+        res.bytes += line.len() as u64;
+        res.bytes += 1; // don't forget the \n!
+
+        res.words += line.split_whitespace().count() as u64;
+
+        let length = line.chars().count() as u64;
+        res.chars += length;
+        res.chars += 1; // don't forget the \n!
+
+        if length > res.max_line_length {
+            res.max_line_length = length;
+        }
+    }
+
+    res
+}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -40,53 +73,35 @@ fn main() {
         return;
     }
 
-    // just for now.
-    let filename = matches.free[0].clone();
-    let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
-    let reader = BufReader::new(file);
-
-    let mut bytes = 0;
-    let mut chars = 0;
-    let mut lines = 0;
-    let mut words = 0;
-    let mut max_line_length = 0;
-
-    for line in reader.lines() {
-        let line = line.ok().expect("There was an IO error.");
-
-        lines += 1;
-        bytes += line.len();
-        bytes += 1; // don't forget the \n!
-
-        words += line.split_whitespace().count();
-
-        let length = line.chars().count();
-        chars += length;
-        chars += 1; // don't forget the \n!
-
-        if length > max_line_length {
-            max_line_length = length;
-        }
-    }
+    let (counts, filename) = match matches.free.len() {
+        0 => (do_count(BufReader::new(stdin())), "<stdin>".to_string()),
+        1 => {
+            // just for now.
+            let filename = matches.free[0].clone();
+            let file = File::open(&filename).ok().expect("I couldn't open that file, sorry :(");
+            (do_count(BufReader::new(file)), filename)
+        },
+        _ => panic!("A single filename was expected"),
+    };
 
     if matches.opt_present("lines") {
-        print!("{} ", lines);
+        print!("{} ", counts.lines);
     }
 
     if matches.opt_present("words") {
-        print!("{} ", words)
+        print!("{} ", counts.words)
     }
 
     if matches.opt_present("bytes") {
-        print!("{} ", bytes)
+        print!("{} ", counts.bytes)
     }
 
     if matches.opt_present("chars") {
-        print!("{} ", chars)
+        print!("{} ", counts.chars)
     }
 
     if matches.opt_present("max-line-length") {
-        print!("{} ", max_line_length)
+        print!("{} ", counts.max_line_length)
     }
 
     println!(" {}", filename);
